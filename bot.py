@@ -46,8 +46,12 @@ async def get_b19(event):
     if not sender_id or not isinstance(sender_id, PeerUser):
         event.respond("Anonymous user is not supported.")
         return
-    token: str = conf.users[sender_id]
-    file = await phigros.get_b19(token)
+    token: str = conf.users.get(sender_id)
+    if not token:
+        event.respond("Please bind your account first.")
+        return
+    file = await phigros.get_b19_img(token)
+    event.respond("Developing...")
     
 
 async def run():
