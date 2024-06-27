@@ -104,11 +104,7 @@ async def update_diff(event):
     update_difficulty("update.apk")
     event.respond("Difficulty table updated.")
 
-async def run():
-    logger.info("TelegramPhigrosBot start running.")
-    client.run_until_disconnected()
-    logger.info("Bot is shuting down...")
-    
-
 if __name__ == "__main__":
-    asyncio.run(run)
+    logger.info("TelegramPhigrosBot start running.")
+    asyncio.run(client.run_until_disconnected())
+    logger.info("Bot is shuting down...")
