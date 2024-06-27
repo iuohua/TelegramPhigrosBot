@@ -1,7 +1,7 @@
 import asyncio
 from PIL import Image
 from pathlib import Path
-from phigrosLibrary import PhigrosLibrary
+from phigros.phigrosLibrary import PhigrosLibrary
 
 from model import PhigrosB19
 
@@ -14,13 +14,31 @@ class Phigros:
         ...
         
     async def get_b19_img(self, token) -> Path:
+        # ToDo
         handle = self.phigros.get_handle(token)
         b19 = self.phigros.get_b19(handle)
         
         
+        self.phigros.free_handle(handle)
+        raise NotImplementedError
         
-    
-
+    async def get_b19_info(self, token) -> str:
+        handle = self.phigros.get_handle(token)
+        b19 = self.phigros.get_b19(handle)
+        rks = round(b19.rks, 2)
+        if rks == -1:
+            return f"Find unknown record: {b19.phi.id}"
+        phi_score = b19.phi
+        b19_score = b19.best
+        message = f"```\nYour rks: {rks}\n"
+        message += "Phi: \n"  + f"    Name: {phi_score.id}\n" + f"    Score: {phi_score.score} ({round(phi_score.acc, 2)})" + f"    Difficulty: {round(phi_score.difficulty, 1)}" + f"    rks: {round(phi_score.rks, 4)}" + f"    FC: {'True' if phi_score.fc else 'False'}" + "\n"
+        message += "Best19: \n"
+        for i in b19_score:
+            message += f"    Name: {i.id}\n" + f"    Score: {i.score} ({round(i.acc, 2)})" + f"    Difficulty: {round(i.difficulty, 1)}" + f"    rks: {round(i.rks, 4)}" + f"    FC: {'True' if i.fc else 'False'}" + "\n"
+        message += "\n```"
+        self.phigros.free_handle(handle)
+        return message
+        
 def get_rank(score: int, fc: int):
     if score == 1000000:
         rank = "Phi"
