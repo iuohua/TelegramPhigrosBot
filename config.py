@@ -9,8 +9,10 @@ class Config(BaseModel):
     bot_token: str
     proxy: Optional[Dict|Tuple] = None
     users: List[Dict[int, str]] = []
+    owner: Optional[int] = None
     # [{id: token}, ...]
     
 def get_config() -> Config:
-    conf_json = json.load("config.json")
-    return Config(*conf_json)
+    with open("config.json", "r", encoding="utf8") as f:
+        conf_json = json.load(f)
+        return Config.model_validate(conf_json)
