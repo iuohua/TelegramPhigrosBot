@@ -45,7 +45,7 @@ async def start(event: events.NewMessage.Event):
                   "/b19 get your phigros b19 graph, bind your accounnt before use this function. (gugugu...)\n"
                   "/b19_text get your phigros b19 data, text version.\n"
                   "Author: @luohua If you can help with B19 graph generate, please contact (or directly PR)\n\n"
-                  "Opensouce on https://github.com/iuohua/TelegramPhigrosBot with AGPT L")
+                  "Open source on https://github.com/iuohua/TelegramPhigrosBot with AGPT L")
     return
 
 @client.on(event=events.NewMessage(pattern="/phi bind (.*)"))
