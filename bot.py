@@ -6,6 +6,7 @@ from telethon.tl.types import PeerUser
 from loguru import logger
 
 from phigros.phigros import Phigros
+from phigros.gameInfo import update_difficulty
 from config import get_config
 
 conf = get_config()
@@ -29,6 +30,12 @@ def get_token(event, sender_id: Optional[int]) -> str:
         return
     return token
     
+def get_id(sender_id) -> Optional[int]:
+   if isinstance(sender_id, int):
+       return sender_id
+   if isinstance(sender_id, PeerUser):
+       return sender_id.user_id
+   return None 
 
 @client.on(event=events.NewMessage(pattern="/start"))
 async def start(event: events.NewMessage.Event):
@@ -47,8 +54,8 @@ async def bind_phigros_account(event):
     if not token:
         event.respond("Can not find token")
         return
-    sender_id = event.from_id
-    if not sender_id or not isinstance(sender_id, PeerUser):
+    sender_id = get_id(event.from_id)
+    if not sender_id:
         event.respond("Anonymous user is not supported.")
         return
     sender_id = sender_id.user_id
@@ -57,7 +64,10 @@ async def bind_phigros_account(event):
     
 @client.on(event=events.NewMessage(pattern="/b19"))
 async def get_b19_graph(event):
-    sender_id = event.from_id
+    sender_id = get_id(event.from_id)
+    if not sender_id:
+        event.respond("Anonymous user is not supported.")
+        return
     token = get_token(event, sender_id)
     if not token:
         return
@@ -66,13 +76,33 @@ async def get_b19_graph(event):
 
 @client.on(event=events.NewMessage(pattern="/b19_text"))
 async def get_b19_text(event):
-    sender_id = event.from_id
+    sender_id = get_id(event.from_id)
+    if not sender_id:
+        event.respond("Anonymous user is not supported.")
+        return
     token = get_token(event, sender_id)
     if not token:
         return
     message = await phigros.get_b19_info(token)
     logger.debug(message)
     event.respond(message)
+    
+@client.on(event=events.NewMessage(pattern="/update"))
+async def update_diff(event):
+    sender_id = get_id(event.from_id)
+    if not sender_id or sender_id != conf.get("owner"):
+        return
+    file_message = event.reply_to
+    if not file_message:
+        event.respond("Please reply to a file")
+    media = file_message.reply_media
+    if not media:
+        event.respond("Please reply to a file")
+    logger.info("Downloading file...")
+    await client.download_media(media, "update.apk")
+    logger.info("Download complete, update difficulty")
+    update_difficulty("update.apk")
+    event.respond("Difficulty table updated.")
 
 async def run():
     logger.info("TelegramPhigrosBot start running.")

@@ -13,6 +13,8 @@ pillow = "^10.3.0"
 loguru = "^0.7.2"
 telethon = {extras = ["full"], version = "^1.35.0"}
 pydantic = "^2.7.2"
+cryptg = "^0.4.0"
+unitypy = "^1.10.14"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.4.2"

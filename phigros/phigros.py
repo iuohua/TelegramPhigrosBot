@@ -1,8 +1,8 @@
 import asyncio
 from PIL import Image
 from pathlib import Path
-from phigros.phigrosLibrary import PhigrosLibrary
 
+from phigros.phigrosLibrary import PhigrosLibrary
 from model import PhigrosB19
 
 class Phigros:
