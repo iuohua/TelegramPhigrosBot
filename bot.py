@@ -8,6 +8,7 @@ from loguru import logger
 from phigros.phigros import Phigros
 from phigros.gameInfo import update_difficulty
 from config import get_config, save_config
+from model import CustomMarkdown
 
 conf = get_config()
 client = TelegramClient(
@@ -17,6 +18,7 @@ client = TelegramClient(
     
     proxy=conf.proxy
 ).start(bot_token=conf.bot_token)
+client.parse_mode = CustomMarkdown()
 
 phigros = Phigros()
 
@@ -61,7 +63,7 @@ async def bind_phigros_account(event):
         await event.respond("Anonymous user is not supported.")
         return
     conf.users[sender_id] = token
-    await event.respond(f"Successfully bind token: || {token} || \nNotice that this message does not means the token is valid.", parse_mode="md")
+    await event.respond(f"Successfully bind token: [{token}](spoiler) \nNotice that this message does not means the token is valid.")
     
 @client.on(event=events.NewMessage(pattern="^/b19(@PhigrosB19Bot)? *$"))
 async def get_b19_graph(event):
