@@ -30,7 +30,7 @@ class Phigros:
             return f"Find unknown record: {b19.phi.id}"
         phi_score = b19.phi
         b19_score = b19.best
-        message = f"```\nYour rks: {rks}\n"
+        message = f"```PhigrosB19\nYour rks: {rks}\n"
         message += "Phi: \n"  + f"    Name: {phi_score.id}\n" + f"    Score: {phi_score.score} ({round(phi_score.acc, 2)})" + f"    Difficulty: {round(phi_score.difficulty, 1)}" + f"    rks: {round(phi_score.rks, 4)}" + f"    FC: {'True' if phi_score.fc else 'False'}" + "\n"
         message += "Best19: \n"
         for i in b19_score:

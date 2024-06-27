@@ -2,6 +2,7 @@
 .ssh
 config.json
 tgPhiBot.session
+tgPhiBot.session-journal
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
