@@ -31,10 +31,10 @@ class Phigros:
         phi_score = b19.phi
         b19_score = b19.best
         message = f"```PhigrosB19\nYour rks: {rks}\n"
-        message += "Phi: \n"  + f"    Name: {phi_score.id}\n" + f"    Score: {phi_score.score} ({round(phi_score.acc, 2)})" + f"    Difficulty: {round(phi_score.difficulty, 1)}" + f"    rks: {round(phi_score.rks, 4)}" + f"    FC: {'True' if phi_score.fc else 'False'}" + "\n"
+        message += "Phi: \n"  + f"    Name: {phi_score.id}" + f"    Score: {phi_score.score} ({round(phi_score.acc, 2)}%)\n" + f"    Difficulty: {round(phi_score.difficulty, 1)}" + f"    rks: {round(phi_score.rks, 4)}" + f"  {'FC' if phi_score.fc else ''}" + "\n\n"
         message += "Best19: \n"
         for i in b19_score:
-            message += f"    Name: {i.id}\n" + f"    Score: {i.score} ({round(i.acc, 2)})" + f"    Difficulty: {round(i.difficulty, 1)}" + f"    rks: {round(i.rks, 4)}" + f"    FC: {'True' if i.fc else 'False'}" + "\n"
+            message += f"    Name: {i.id}" + f"    Score: {i.score} ({round(i.acc, 2)}%)\n" + f"    Difficulty: {round(i.difficulty, 1)}" + f"    rks: {round(i.rks, 4)}" + f"  {'FC' if i.fc else ''}" + "\n\n"
         message += "\n```"
         self.phigros.free_handle(handle)
         return message
