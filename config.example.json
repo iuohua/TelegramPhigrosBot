@@ -4,5 +4,6 @@
     "bot_token": "abc:xxx",
     "proxy": {
         
-    }
+    },
+    "owner": 123
 }

@@ -44,7 +44,7 @@ class PhigrosLibrary:
         if "ERROR:std::out_of_range" in b19:
             logger.warning(f"Find unknown record, maybe because new version update: {b19}")
             return PhigrosB19(rks=-1, phi=PhigrosScore(id=b19, level=0, difficulty=-1, rks=-1, score=0, acc=0, fc=0), best=[])
-        return PhigrosB19(json.loads(b19))
+        return PhigrosB19.model_validate(json.loads(b19))
     
     def free_handle(self, handle: int):
         self.phigros.free_handle(handle)

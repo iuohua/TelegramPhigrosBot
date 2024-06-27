@@ -6,5 +6,6 @@ This project is still under development.
 
 ## Feature
 
+- Get Phigros B19 data in text
 - ~~Generate B19 graph~~
 

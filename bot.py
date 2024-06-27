@@ -1,4 +1,5 @@
 import asyncio
+from typing import Optional
 
 from telethon import TelegramClient, events
 from telethon.tl.types import PeerUser
@@ -18,12 +19,26 @@ client = TelegramClient(
 
 phigros = Phigros()
 
+def get_token(event, sender_id: Optional[int]) -> str:
+    if not sender_id or not isinstance(sender_id, PeerUser):
+        event.respond("Anonymous user is not supported.")
+        return
+    token: Optional[str] = conf.users.get(sender_id)
+    if not token:
+        event.respond("Please bind your account first.")
+        return
+    return token
+    
+
 @client.on(event=events.NewMessage(pattern="/start"))
 async def start(event: events.NewMessage.Event):
-    event.respond("luohua's Phigros Telegram Bot.\n\n"
+    event.respond("luohua's Phigros B19 Telegram Bot.\n\n"
                   "Usage: \n"
                   "/phi bind <token> bind your phigros account to your telegram account\n"
-                  "/b19 get your phigros b19 graph, bind your accounnt before use this function.")
+                  "/b19 get your phigros b19 graph, bind your accounnt before use this function. (gugugu...)\n"
+                  "/b19_text get your phigros b19 data, text version.\n"
+                  "Author: @luohua If you can help with B19 graph generate, please contact (or directly PR)"
+                  "Opensouce on https://github.com/iuohua/TelegramPhigrosBot with AGPT L")
     return
 
 @client.on(event=events.NewMessage(pattern="/phi bind (.*)"))
@@ -41,23 +56,29 @@ async def bind_phigros_account(event):
     event.respond(f"Successfully bind token: || {token} || \nNotice that this message does not means the token is valid.")
     
 @client.on(event=events.NewMessage(pattern="/b19"))
-async def get_b19(event):
+async def get_b19_graph(event):
     sender_id = event.from_id
-    if not sender_id or not isinstance(sender_id, PeerUser):
-        event.respond("Anonymous user is not supported.")
-        return
-    token: str = conf.users.get(sender_id)
+    token = get_token(event, sender_id)
     if not token:
-        event.respond("Please bind your account first.")
         return
-    file = await phigros.get_b19_img(token)
-    event.respond("Developing...")
-    
+    # file = await phigros.get_b19_img(token)
+    event.respond("")
+
+@client.on(event=events.NewMessage(pattern="/b19_text"))
+async def get_b19_text(event):
+    sender_id = event.from_id
+    token = get_token(event, sender_id)
+    if not token:
+        return
+    message = await phigros.get_b19_info(token)
+    logger.debug(message)
+    event.respond(message)
 
 async def run():
     logger.info("TelegramPhigrosBot start running.")
     client.run_until_disconnected()
     logger.info("Bot is shuting down...")
+    
 
 if __name__ == "__main__":
     asyncio.run(run)
