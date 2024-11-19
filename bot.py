@@ -49,7 +49,7 @@ async def start(event: events.NewMessage.Event):
                   "/phi bind <token> bind your phigros account to your telegram account. (DO NOT bind your account in a public group)\n"
                   "/b19 get your phigros b19 graph, bind your accounnt before use this function. (gugugu...)\n"
                   "/b19_text get your phigros b19 data, text version.\n"
-                  "Author: @luohua If you can help with B19 graph generate, please contact (or directly PR)\n\n"
+                  "Author: @luohua If you can help with B19 graph generation, please contact me (or directly PR)\n\n"
                   "Open source on https://github.com/iuohua/TelegramPhigrosBot with AGPL License")
     return
 
