@@ -3,6 +3,7 @@ from typing import Optional
 
 from telethon import TelegramClient, events
 from telethon.tl.types import PeerUser, PeerChat, PeerChannel
+from telethon.functions import messages
 from loguru import logger
 
 from phigros.phigros import Phigros
@@ -45,11 +46,11 @@ def get_id(from_id, peer_id) -> Optional[int]:
 async def start(event: events.NewMessage.Event):
     await event.respond("luohua's Phigros B19 Telegram Bot.\n\n"
                   "Usage: \n"
-                  "/phi bind <token> bind your phigros account to your telegram account\n"
+                  "/phi bind <token> bind your phigros account to your telegram account. (DO NOT bind your account in a public group)\n"
                   "/b19 get your phigros b19 graph, bind your accounnt before use this function. (gugugu...)\n"
                   "/b19_text get your phigros b19 data, text version.\n"
                   "Author: @luohua If you can help with B19 graph generate, please contact (or directly PR)\n\n"
-                  "Open source on https://github.com/iuohua/TelegramPhigrosBot with AGPT License")
+                  "Open source on https://github.com/iuohua/TelegramPhigrosBot with AGPL License")
     return
 
 @client.on(event=events.NewMessage(pattern="^/phi bind (.*?)$"))
@@ -80,6 +81,8 @@ async def get_b19_graph(event):
 @client.on(event=events.NewMessage(pattern="^/b19_text(@PhigrosB19Bot)? *$"))
 async def get_b19_text(event):
     sender_id = get_id(event.from_id, event.peer_id)
+    sender = await event.get_sender()
+    logger.info(f"Trying to get b19_text for {sender.username}({sender_id})")
     if not sender_id:
         logger.debug("check")
         await event.respond("Anonymous user is not supported.")
@@ -94,16 +97,24 @@ async def get_b19_text(event):
 @client.on(event=events.NewMessage(pattern="/update"))
 async def update_diff(event):
     sender_id = get_id(event.from_id, event.peer_id)
-    if not sender_id or sender_id != conf.get("owner"):
+    if not sender_id or sender_id != conf.owner:
         return
     file_message = event.reply_to
+    # logger.debug(file_message)
     if not file_message:
         await event.respond("Please reply to a file")
-    media = file_message.reply_media
-    if not media:
+        return
+    reply_id = file_message.reply_to_msg_id
+    if not reply_id:
         await event.respond("Please reply to a file")
+        return
+    reply = await client.get_messages(await event.get_chat(), ids=reply_id)
+    if not reply.media:
+        await event.respond("Please reply to a file")
+        return
     logger.info("Downloading file...")
-    await client.download_media(media, "update.apk")
+    await event.respond("Downloading...")
+    await client.download_media(reply.media, "update.apk")
     logger.info("Download complete, update difficulty")
     update_difficulty("update.apk")
     await event.respond("Difficulty table updated.")
