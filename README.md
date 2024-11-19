@@ -8,7 +8,7 @@ This project is still under development.
 
 - Get Phigros B19 data in text
 - Update difficulty table with bot
-- ~~Generate B19 graph~~
+- ~~Generate B19 graph (looking for a good template)~~
 
 # Acknowledgement
 
