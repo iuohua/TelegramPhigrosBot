@@ -1,3 +1,4 @@
+import os
 import ctypes
 import json
 from loguru import logger
@@ -5,7 +6,10 @@ from model import PhigrosB19, PhigrosScore
 
 class PhigrosLibrary:
     def __init__(self) -> None:
-        self.phigros = ctypes.CDLL("./lib/libphigros-64.so")
+        if os.name == "nt":
+            self.phigros = ctypes.CDLL("./lib/phigros-64.dll")
+        else:
+            self.phigros = ctypes.CDLL("./lib/libphigros-64.so")
         self.phigros.get_handle.argtypes = ctypes.c_char_p,
         self.phigros.get_handle.restype = ctypes.c_void_p
         self.phigros.free_handle.argtypes = ctypes.c_void_p,
