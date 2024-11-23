@@ -76,7 +76,7 @@ async def get_b19_graph(event):
     if not token:
         return
     # file = await phigros.get_b19_img(token)
-    await event.respond("")
+    await event.respond("B19 graph is not support. Please use /b19_text.")
 
 @client.on(event=events.NewMessage(pattern="^/b19_text(@PhigrosB19Bot)? *$"))
 async def get_b19_text(event):
